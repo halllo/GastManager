@@ -20,12 +20,12 @@ angular.module('gastmanager', ['ionic', 'gastmanager.controllers', 'gastmanager.
     controller: 'AppCtrl'
   })
 
-  .state('app.einstellungen', {
-    url: '/einstellungen',
+  .state('app.gast', {
+    url: '/gast',
     views: {
       'menuContent': {
-        templateUrl: 'templates/einstellungen.html',
-        controller: 'EinstellungenCtrl'
+        templateUrl: 'templates/gast.html',
+        controller: 'GastCtrl'
       }
     }
   })
@@ -36,6 +36,16 @@ angular.module('gastmanager', ['ionic', 'gastmanager.controllers', 'gastmanager.
       'menuContent': {
         templateUrl: 'templates/ereignisse.html',
         controller: 'EreignisseCtrl'
+      }
+    }
+  })
+
+  .state('app.einstellungen', {
+    url: '/einstellungen',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/einstellungen.html',
+        controller: 'EinstellungenCtrl'
       }
     }
   })

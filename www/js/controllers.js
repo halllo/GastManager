@@ -4,7 +4,7 @@ angular.module('gastmanager.controllers', [])
 
 })
 
-.controller('EinstellungenCtrl', function($scope) {
+.controller('GastCtrl', function($scope) {
 
 })
 
@@ -34,4 +34,8 @@ angular.module('gastmanager.controllers', [])
     SignalR.emit($scope.newEvent.clientName, $scope.newEvent.eventMessage);
     $scope.newEvent.eventMessage = "";
   };
+})
+
+.controller('EinstellungenCtrl', function($scope) {
+
 })
