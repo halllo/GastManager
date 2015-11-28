@@ -4,21 +4,34 @@ angular.module('gastmanager.controllers', [])
 
 })
 
-.controller('BrowseCtrl', function($scope) {
+.controller('EinstellungenCtrl', function($scope) {
 
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
+.controller('EreignisseCtrl', function($scope, SignalR, $rootScope) {
+  $rootScope.$on("newMessage", function (e, name, message) {
+    $scope.$apply(function () {
+      newMessage(name, message);
+    });
+  });
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
-  $scope.name = $stateParams;
+  var newMessage = function (name, message) {
+    $scope.events.splice(0, 0, {
+      timestamp: new Date(),
+      clientName: name, 
+      eventMessage: message
+    });
+  }
+
+  $scope.events = [];
+
+  $scope.newEvent = {
+    clientName: "",
+    eventMessage: ""
+  };
+
+  $scope.emit = function() {
+    SignalR.emit($scope.newEvent.clientName, $scope.newEvent.eventMessage);
+    $scope.newEvent.eventMessage = "";
+  };
 })

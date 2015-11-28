@@ -1,4 +1,4 @@
-angular.module('gastmanager', ['ionic', 'gastmanager.controllers'])
+angular.module('gastmanager', ['ionic', 'gastmanager.controllers', 'gastmanager.services'])
 
 .run(function($ionicPlatform) {
 
@@ -20,35 +20,25 @@ angular.module('gastmanager', ['ionic', 'gastmanager.controllers'])
     controller: 'AppCtrl'
   })
 
-  .state('app.browse', {
-    url: '/browse',
+  .state('app.einstellungen', {
+    url: '/einstellungen',
     views: {
       'menuContent': {
-        templateUrl: 'templates/browse.html',
-        controller: 'BrowseCtrl'
+        templateUrl: 'templates/einstellungen.html',
+        controller: 'EinstellungenCtrl'
       }
     }
   })
 
-  .state('app.playlists', {
-    url: '/playlists',
+  .state('app.ereignisse', {
+    url: '/ereignisse',
     views: {
       'menuContent': {
-        templateUrl: 'templates/playlists.html',
-        controller: 'PlaylistsCtrl'
+        templateUrl: 'templates/ereignisse.html',
+        controller: 'EreignisseCtrl'
       }
     }
   })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  });
   
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/ereignisse');
 });
