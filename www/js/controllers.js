@@ -4,8 +4,53 @@ angular.module('gastmanager.controllers', [])
 
 })
 
-.controller('GastCtrl', function($scope) {
+.controller('GastCtrl', function($scope, SignalR) {
 
+  $scope.aktualisieren = function(gast) {
+    SignalR.emit("gastmanager.app", "Gast " + gast.id + ", " + gast.name + ", " + gast.farbe);
+  };
+
+  $scope.customColors = {
+    "rot" : "#ff0000",
+    "grün" : "#008000",
+    "blau" : "#0000ff",
+    "lime" : "#00ff00",
+    "magenta" : "#ff1493",
+    "grau" : "#a9a9a9"
+  };
+
+  $scope.gaeste = [
+    {
+      id: 0,
+      name: "",
+      farbe: null
+    },
+    {
+      id: 1,
+      name: "",
+      farbe: null
+    },
+    {
+      id: 2,
+      name: "",
+      farbe: null
+    },
+    {
+      id: 3,
+      name: "",
+      farbe: null
+    },
+    {
+      id: 4,
+      name: "",
+      farbe: null
+    },
+    {
+      id: 5,
+      name: "",
+      farbe: null
+    }
+  ];
 })
 
 .controller('EreignisseCtrl', function($scope, SignalR, $rootScope) {
@@ -24,16 +69,6 @@ angular.module('gastmanager.controllers', [])
   }
 
   $scope.events = [];
-
-  $scope.newEvent = {
-    clientName: "",
-    eventMessage: ""
-  };
-
-  $scope.emit = function() {
-    SignalR.emit($scope.newEvent.clientName, $scope.newEvent.eventMessage);
-    $scope.newEvent.eventMessage = "";
-  };
 })
 
 .controller('EinstellungenCtrl', function($scope) {

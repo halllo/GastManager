@@ -13,7 +13,7 @@ angular.module('gastmanager.services', [])
     };
 
     $.connection.hub.start().done(function () {
-      chat.server.send("app", "Hallo");
+      chat.server.send("gastmanager.app", "Hallo");
     });
   }
   catch(e) {

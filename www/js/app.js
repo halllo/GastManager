@@ -1,4 +1,4 @@
-angular.module('gastmanager', ['ionic', 'gastmanager.controllers', 'gastmanager.services'])
+angular.module('gastmanager', ['ionic', 'ionic-color-picker', 'gastmanager.controllers', 'gastmanager.services'])
 
 .run(function($ionicPlatform) {
 
