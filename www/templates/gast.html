@@ -12,12 +12,10 @@
 	    <button class="item button button-full button-light" color-picker="" color-mode="name" model-mode="name" ng-model="gast.farbe" modal-title="Farbe auswählen" color-box="{{gast.farbe}}" named-colors="customColors">
 	      {{gast.farbe || &apos;Farbe auswählen&apos; }}
 	    </button>
-	    <div class="item tabs tabs-icon-left">
-	      <a class="tab-item" ng-click="aktualisieren(gast)">
-	        <i class="icon ion-paper-airplane"></i>
-	        Aktualisieren
-	      </a>
-	    </div>
+	    <button class="item button button-full button-light" ng-click="aktualisieren(gast)">
+	      <i class="icon ion-paper-airplane"></i>
+	      Aktualisieren
+	    </button>
 	  </div>
 	</ion-list>
   </ion-content>
