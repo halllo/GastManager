@@ -1,6 +1,7 @@
 angular.module('gastmanager.services', [])
 
-.factory('SignalR', function ($rootScope) {
+
+.factory('SignalR', function (GastUpdates, $rootScope) {
   
   var chat = null;
 
@@ -13,7 +14,7 @@ angular.module('gastmanager.services', [])
     };
 
     $.connection.hub.start().done(function () {
-      chat.server.send("gastmanager.app", "Hallo");
+      chat.server.send("gastmanager.app", "hallo");
     });
   }
   catch(e) {
@@ -24,6 +25,46 @@ angular.module('gastmanager.services', [])
       if (chat != null) {
         chat.server.send(name, message);
       }
+    }
+  }
+})
+
+
+.factory('GastUpdates', function ($rootScope) {
+  
+  var gaeste = [];
+
+  $rootScope.$on("newMessage", function (e, name, message) {
+    if (name === "couchtisch" && message.startsWith("gäste;"))
+    {
+      var gs = message.split("\n");
+      gaeste = [];
+      for (var i = 1; i < gs.length; i++) {
+        var gss = gs[i].split(";");
+        gaeste.push({
+          id: parseInt(gss[0]),
+          name: gss[1],
+          farbe: gss[2]
+        });
+      }
+      $rootScope.$emit("gastUpdates");
+    }
+  });
+
+  return {
+    alle: function() { 
+      return gaeste; 
+    },
+    fuerId: function(id) {
+      for (var i = 0; i < gaeste.length; i++) {
+        if (gaeste[i].id == id) {
+          return gaeste[i];
+        }
+      }
+      return {
+        name: null,
+        farbe: null
+      };
     }
   }
 })

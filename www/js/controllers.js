@@ -1,13 +1,14 @@
 angular.module('gastmanager.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
 
+.controller('AppCtrl', function($scope) {
 })
 
-.controller('GastCtrl', function($scope, SignalR) {
+
+.controller('GastCtrl', function($scope, $rootScope, SignalR, GastUpdates) {
 
   $scope.aktualisieren = function(gast) {
-    SignalR.emit("gastmanager.app", "Gast " + gast.id + ", " + gast.name + ", " + gast.farbe);
+    SignalR.emit("gastmanager.app", "couchtisch;" + gast.id + ";" + gast.name + ";" + gast.farbe);
   };
 
   $scope.customColors = {
@@ -22,38 +23,46 @@ angular.module('gastmanager.controllers', [])
   $scope.gaeste = [
     {
       id: 0,
-      name: "",
-      farbe: null
+      name: GastUpdates.fuerId(0).name,
+      farbe: GastUpdates.fuerId(0).farbe
     },
     {
       id: 1,
-      name: "",
-      farbe: null
+      name: GastUpdates.fuerId(1).name,
+      farbe: GastUpdates.fuerId(1).farbe
     },
     {
       id: 2,
-      name: "",
-      farbe: null
+      name: GastUpdates.fuerId(2).name,
+      farbe: GastUpdates.fuerId(2).farbe
     },
     {
       id: 3,
-      name: "",
-      farbe: null
+      name: GastUpdates.fuerId(3).name,
+      farbe: GastUpdates.fuerId(3).farbe
     },
     {
       id: 4,
-      name: "",
-      farbe: null
+      name: GastUpdates.fuerId(4).name,
+      farbe: GastUpdates.fuerId(4).farbe
     },
     {
       id: 5,
-      name: "",
-      farbe: null
+      name: GastUpdates.fuerId(5).name,
+      farbe: GastUpdates.fuerId(5).farbe
     }
   ];
+
+  $rootScope.$on("gastUpdates", function (e) {
+    $scope.$apply(function () {
+      $scope.gaeste = GastUpdates.alle();
+    });
+  });
+
 })
 
-.controller('EreignisseCtrl', function($scope, SignalR, $rootScope) {
+
+.controller('EreignisseCtrl', function($scope, $rootScope, SignalR) {
   $rootScope.$on("newMessage", function (e, name, message) {
     $scope.$apply(function () {
       newMessage(name, message);
@@ -71,6 +80,6 @@ angular.module('gastmanager.controllers', [])
   $scope.events = [];
 })
 
-.controller('EinstellungenCtrl', function($scope) {
 
+.controller('EinstellungenCtrl', function($scope) {
 })
