@@ -1,0 +1,24 @@
+<ion-view view-title="Gäste">
+  <ion-content>
+  	<ion-list>
+  	  <div class="list card" ng-repeat="gast in gaeste">
+  	  	<div class="item item-icon-left" >
+  	  	  <i class="icon ion-person"></i>
+    	  <b>Gast {{gast.id}}</b>
+  		</div>
+	  	<label class="item item-input">
+	  	  <input type="text" placeholder="Name" ng-model="gast.name">
+	    </label>
+	    <div class="item button-bar">
+	      <button class="button button-light" color-picker="" color-mode="name" model-mode="name" ng-model="gast.farbe" modal-title="Farbe auswählen" color-box="{{gast.farbe}}" named-colors="customColors">
+	      {{gast.farbe || &apos;Farbe auswählen&apos; }}
+	      </button>
+	      <button class="button button-light" ng-click="aktualisieren(gast)">
+	        <i class="icon ion-paper-airplane"></i>
+	        Aktualisieren
+	      </button>
+	    </div>
+	  </div>
+	</ion-list>
+  </ion-content>
+</ion-view>
