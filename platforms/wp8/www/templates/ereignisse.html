@@ -1,0 +1,10 @@
+<ion-view view-title="Ereignisse">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-text-wrap" ng-repeat="event in events">
+        <p>{{event.timestamp | date:'medium'}}</p>
+        <h2>{{event.clientName}}: {{event.eventMessage}}</h2>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Package IgnorableNamespaces="uap mp" xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10">
     <Identity Name="io.cordova.halllo.GastManager" Publisher="CN=$username$" Version="0.0.1.0" />
-    <mp:PhoneIdentity PhoneProductId="aa3e9230-9622-11e5-9c6a-2116bed6ca10" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+    <mp:PhoneIdentity PhoneProductId="788e50f0-97ac-11e5-a4f9-7dc472b6b4b6" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
     <Properties>
         <DisplayName>GastManager</DisplayName>
         <PublisherDisplayName>Manuel Naujoks</PublisherDisplayName>

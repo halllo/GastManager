@@ -15,7 +15,6 @@ Project("{262852C6-CD72-467D-83FE-5EEB1973A190}") = "CordovaApp.Windows10", "Cor
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		CordovaApp.projitems*{f9b0ae20-c91c-42b9-9c6e-d3bc28b4509e}*SharedItemsImports = 5
 		CordovaApp.projitems*{58950fb6-2f93-4963-b9cd-637f83f3efbf}*SharedItemsImports = 5
 		CordovaApp.projitems*{9ebdb27f-d75b-4d8c-b53f-7be4a1fe89f9}*SharedItemsImports = 13
 		CordovaApp.projitems*{31b67a35-9503-4213-857e-f44eb42ae549}*SharedItemsImports = 5
