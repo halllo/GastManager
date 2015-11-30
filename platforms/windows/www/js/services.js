@@ -6,8 +6,8 @@
   var chat = null;
 
   try {
-    //$.connection.hub.url = "http://mbus.de:8000/signalr";
-    $.connection.hub.url = "http://localhost:8000/signalr";
+    $.connection.hub.url = "http://mbus.de:8000/signalr";
+    //$.connection.hub.url = "http://localhost:8000/signalr";
     chat = $.connection.myHub;
     chat.client.addMessage = function (name, message) {
       $rootScope.$emit("newMessage", name, message);
