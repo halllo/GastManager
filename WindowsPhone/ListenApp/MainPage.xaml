@@ -1,0 +1,34 @@
+﻿<Page
+    x:Class="ListenApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ListenApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+	<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<ListBox Grid.Row="0" ItemsSource="{Binding Einträge}" x:Name="EinträgeListBox">
+			<ListBox.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel HorizontalAlignment="Stretch"/>
+				</ItemsPanelTemplate>
+			</ListBox.ItemsPanel>
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Text}" TextWrapping="Wrap" Foreground="{Binding Color}" FontSize="{Binding Size}"/>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+	</Grid>
+	<Page.BottomAppBar>
+		<CommandBar>
+			<AppBarToggleButton x:Name="GermanButton" Icon="Globe" Label="German" Checked="GermanChanged" Unchecked="GermanChanged"></AppBarToggleButton>
+			<AppBarSeparator/>
+			<AppBarButton x:Name="ListenButton" Click="Listen_Click" Icon="Microphone" Label="Listen"></AppBarButton>
+		</CommandBar>
+	</Page.BottomAppBar>
+</Page>
