@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<title>Gast Manager</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<style type="text/css">
+		.circle {
+			overflow:hidden;
+			display:block;
+			float:left;
+			max-width:300px;
+			max-height:300px;
+			border-radius:150px;
+			-moz-border-radius:150px;
+			-webkit-border-radius:150;
+			-khtml-border-radius: 150;
+			padding: 150px;
+		}
+		#adminarea li {
+			font-size: 20px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+		
+	</style>
+
+</head>
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Gast Manager</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="jumbotron" style="background-color: WhiteSmoke; margin-top: 50px;">
+		<div class="container">
+			<h1>Willkommen <small>bei Manuel</small></h1>
+			<p>Hier können Sie Ihren Glasuntersatz direkt selbst konfigurieren.</p>
+		</div>
+	</div>
+
+	<div id="adminarea" class="container" style="display: none;">
+		<h1>Admin</h1>
+		<ul></ul>
+	</div>
+
+	<div id="configarea" class="container" style="padding-top: 50px; display: none;">
+		
+		<div class="col-md-4 col-sm-12 col-xs-12">
+			<div id="circle" class="circle" style="background: WhiteSmoke;"></div>	
+		</div>
+		
+		<div class="col-md-8 col-sm-12 col-xs-12" style="margin-top: 70px;">
+
+			<button type="button" class="btn btn-default" id="changeColorToRed" style="margin-right: 10px; background: red;">&nbsp;&nbsp;</button>
+			<button type="button" class="btn btn-default" id="changeColorToGreen" style="margin-right: 10px; background: green;">&nbsp;&nbsp;</button>
+			<button type="button" class="btn btn-default" id="changeColorToBlue" style="margin-right: 10px; background: blue;">&nbsp;&nbsp;</button>
+			<button type="button" class="btn btn-default" id="changeColorToLime" style="margin-right: 10px; background: lime;">&nbsp;&nbsp;</button>
+			<button type="button" class="btn btn-default" id="changeColorToMagenta" style="margin-right: 10px; background: magenta;">&nbsp;&nbsp;</button>
+			<button type="button" class="btn btn-default" id="changeColorToGray" style="margin-right: 10px; background: gray;">&nbsp;&nbsp;</button>
+
+			<div class="input-group" style="margin-top: 30px;">
+				<span class="input-group-addon" id="nameinput"></span>
+				<input type="text" id="name" class="form-control" placeholder="Name" aria-describedby="nameinput">
+			</div>
+
+			<button type="button" id="save" class="btn btn-default" aria-label="Left Align" style="margin-top: 30px;">
+				<span class="glyphicon glyphicon-save" aria-hidden="true"></span> Speichern
+			</button>
+		</div>
+
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js" integrity="sha256-qOAva3TZS8zEHOtY5AXvhOmw1ZfX46nsmnxF5FjJ1CI=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/sha1-min.js" integrity="sha256-aOVYQyJfupJDzBubvsuts8nQ5poqhE24IvW9s4eyO9o=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js" integrity="sha256-lDcU9wi187tvmD2D2AvfRvhuVthZ5UxIP7Oh+Rk3yNw=" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		$(function () {
+
+			function getParameterByName(name, url) {
+    			if (!url) {
+      				url = window.location.href;
+    			}
+    			name = name.replace(/[\[\]]/g, "\\$&");
+    			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        		results = regex.exec(url);
+    			if (!results) return null;
+    			if (!results[2]) return '';
+    			return decodeURIComponent(results[2].replace(/\+/g, " "));
+			}
+			
+
+
+			var guest1 = CryptoJS.SHA1('1 on ' + moment().format('DDMMYYYY')).toString(CryptoJS.enc.Hex).toUpperCase();
+			var guest2 = CryptoJS.SHA1('2 on ' + moment().format('DDMMYYYY')).toString(CryptoJS.enc.Hex).toUpperCase();
+			var guest3 = CryptoJS.SHA1('3 on ' + moment().format('DDMMYYYY')).toString(CryptoJS.enc.Hex).toUpperCase();
+			var guest4 = CryptoJS.SHA1('4 on ' + moment().format('DDMMYYYY')).toString(CryptoJS.enc.Hex).toUpperCase();
+			var guest5 = CryptoJS.SHA1('5 on ' + moment().format('DDMMYYYY')).toString(CryptoJS.enc.Hex).toUpperCase();
+			
+			var id = getParameterByName('id').toUpperCase(); //create test-hashes at http://onlinemd5.com/
+			var loggedInAs = id === guest1 ? 0 :
+							 id === guest2 ? 1 :
+							 id === guest3 ? 2 :
+							 id === guest4 ? 3 :
+							 id === guest5 ? 4 : -1;
+
+			if (loggedInAs === -1) {
+			 	alert('Die Benutzerkennung ist ungültig!');
+			}
+			else {
+
+				if (loggedInAs === 0) {
+					$('#adminarea').show();
+					$('#adminarea ul').append('<li><a href="?id=' + guest1 + '">Gast 1</a></li>');
+					$('#adminarea ul').append('<li><a href="?id=' + guest2 + '">Gast 2</a></li>');
+					$('#adminarea ul').append('<li><a href="?id=' + guest3 + '">Gast 3</a></li>');
+					$('#adminarea ul').append('<li><a href="?id=' + guest4 + '">Gast 4</a></li>');
+					$('#adminarea ul').append('<li><a href="?id=' + guest5 + '">Gast 5</a></li>');
+				}
+				$.post('http://localhost:20030/api/mbus', { sender: 'gastmanager.app[' + loggedInAs + ']', content: 'hallo' }, function() {
+					$('#configarea').show();
+				});
+
+			}	
+
+
+			var currentColor = '';
+			$('#changeColorToRed').click(function() { 		$('#circle').css('background', 'red'); 		currentColor = 'rot'; });
+			$('#changeColorToGreen').click(function() { 	$('#circle').css('background', 'green'); 	currentColor = 'grün'; });
+			$('#changeColorToBlue').click(function() { 		$('#circle').css('background', 'blue'); 	currentColor = 'blau'; });
+			$('#changeColorToLime').click(function() { 		$('#circle').css('background', 'lime'); 	currentColor = 'lime'; });
+			$('#changeColorToMagenta').click(function() { 	$('#circle').css('background', 'magenta'); 	currentColor = 'magenta'; });
+			$('#changeColorToGray').click(function() { 		$('#circle').css('background', 'gray'); 	currentColor = 'grau'; });
+			
+			$('#name').keypress(function(event) {
+				if (event.keyCode == 13) {
+					$('#save').click();
+				}
+			});
+			$('#save').click(function() {
+				$.post('http://localhost:20030/api/mbus', { sender: 'gastmanager.app[' + loggedInAs + ']', content: 'couchtisch;' + loggedInAs + ';' + $('#name').val() + ';' + currentColor }, function() {
+				});
+			});
+
+		});
+	</script>
+
+</body>
+</html>
