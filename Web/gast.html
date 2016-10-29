@@ -96,6 +96,7 @@
     			if (!results[2]) return '';
     			return decodeURIComponent(results[2].replace(/\+/g, " "));
 			}
+			var mbusrelay = 'https://mbusrelay.azurewebsites.net';
 			
 
 
@@ -104,13 +105,15 @@
 			var guest3 = CryptoJS.SHA1('3 on ' + moment().format('DDMMYYYY')).toString(CryptoJS.enc.Hex).toUpperCase();
 			var guest4 = CryptoJS.SHA1('4 on ' + moment().format('DDMMYYYY')).toString(CryptoJS.enc.Hex).toUpperCase();
 			var guest5 = CryptoJS.SHA1('5 on ' + moment().format('DDMMYYYY')).toString(CryptoJS.enc.Hex).toUpperCase();
+			var guest6 = CryptoJS.SHA1('6 on ' + moment().format('DDMMYYYY')).toString(CryptoJS.enc.Hex).toUpperCase();
 			
-			var id = getParameterByName('id').toUpperCase(); //create test-hashes at http://onlinemd5.com/
+			var id = (getParameterByName('id') || '').toUpperCase(); //create test-hashes at http://onlinemd5.com/
 			var loggedInAs = id === guest1 ? 0 :
 							 id === guest2 ? 1 :
 							 id === guest3 ? 2 :
 							 id === guest4 ? 3 :
-							 id === guest5 ? 4 : -1;
+							 id === guest5 ? 4 :
+							 id === guest6 ? 5 : -1;
 
 			if (loggedInAs === -1) {
 			 	alert('Die Benutzerkennung ist ungültig!');
@@ -124,32 +127,32 @@
 					$('#adminarea ul').append('<li><a href="?id=' + guest3 + '">Gast 3</a></li>');
 					$('#adminarea ul').append('<li><a href="?id=' + guest4 + '">Gast 4</a></li>');
 					$('#adminarea ul').append('<li><a href="?id=' + guest5 + '">Gast 5</a></li>');
+					$('#adminarea ul').append('<li><a href="?id=' + guest6 + '">Gast 6</a></li>');
 				}
-				$.post('http://localhost:20030/api/mbus', { sender: 'gastmanager.app[' + loggedInAs + ']', content: 'hallo' }, function() {
+				$.post(mbusrelay + '/api/mbus', { sender: 'gastmanager.app[' + loggedInAs + ']', content: 'hallo' }, function() {
 					$('#configarea').show();
 				});
 
-			}	
 
-
-			var currentColor = '';
-			$('#changeColorToRed').click(function() { 		$('#circle').css('background', 'red'); 		currentColor = 'rot'; });
-			$('#changeColorToGreen').click(function() { 	$('#circle').css('background', 'green'); 	currentColor = 'grün'; });
-			$('#changeColorToBlue').click(function() { 		$('#circle').css('background', 'blue'); 	currentColor = 'blau'; });
-			$('#changeColorToLime').click(function() { 		$('#circle').css('background', 'lime'); 	currentColor = 'lime'; });
-			$('#changeColorToMagenta').click(function() { 	$('#circle').css('background', 'magenta'); 	currentColor = 'magenta'; });
-			$('#changeColorToGray').click(function() { 		$('#circle').css('background', 'gray'); 	currentColor = 'grau'; });
-			
-			$('#name').keypress(function(event) {
-				if (event.keyCode == 13) {
-					$('#save').click();
-				}
-			});
-			$('#save').click(function() {
-				$.post('http://localhost:20030/api/mbus', { sender: 'gastmanager.app[' + loggedInAs + ']', content: 'couchtisch;' + loggedInAs + ';' + $('#name').val() + ';' + currentColor }, function() {
+				var currentColor = '';
+				$('#changeColorToRed').click(function() { 		$('#circle').css('background', 'red'); 		currentColor = 'rot'; });
+				$('#changeColorToGreen').click(function() { 	$('#circle').css('background', 'green'); 	currentColor = 'grün'; });
+				$('#changeColorToBlue').click(function() { 		$('#circle').css('background', 'blue'); 	currentColor = 'blau'; });
+				$('#changeColorToLime').click(function() { 		$('#circle').css('background', 'lime'); 	currentColor = 'lime'; });
+				$('#changeColorToMagenta').click(function() { 	$('#circle').css('background', 'magenta'); 	currentColor = 'magenta'; });
+				$('#changeColorToGray').click(function() { 		$('#circle').css('background', 'gray'); 	currentColor = 'grau'; });
+				
+				$('#name').keypress(function(event) {
+					if (event.keyCode == 13) {
+						$('#save').click();
+					}
 				});
-			});
+				$('#save').click(function() {
+					$.post(mbusrelay + '/api/mbus', { sender: 'gastmanager.app[' + loggedInAs + ']', content: 'couchtisch;' + loggedInAs + ';' + $('#name').val() + ';' + currentColor }, function() {
+					});
+				});
 
+			}
 		});
 	</script>
 
