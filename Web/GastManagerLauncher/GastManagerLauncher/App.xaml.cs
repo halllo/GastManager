@@ -1,28 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
+using System.Collections.Generic;
 using JustObjectsPrototype.Universal;
 using JustObjectsPrototype.Universal.JOP;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
-using System.Threading.Tasks;
-using Windows.Data.Xml.Dom;
-using Windows.Data.Json;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml.Linq;
 
 namespace GastManagerLauncher
 {
@@ -34,7 +21,7 @@ namespace GastManagerLauncher
 			this.InitializeComponent();
 		}
 
-		protected override void OnLaunched(LaunchActivatedEventArgs e)
+		protected async override void OnLaunched(LaunchActivatedEventArgs e)
 		{
 			Prototype = Show.Prototype(
 				With.Remembered(new List<object>
@@ -98,7 +85,7 @@ namespace GastManagerLauncher
 
 
 
-	[Title("Events"), Icon(Symbol.Bullets)]
+	[Title("Events"), Icon(Symbol.Bullets), CustomView("EventListItem")]
 	public class Event
 	{
 		[Editor(@readonly: true)]
@@ -108,23 +95,24 @@ namespace GastManagerLauncher
 		public string Message { get; set; }
 
 		[Icon(Symbol.Refresh)]
-		public async static Task<List<Event>> Refresh()
+		public async static void Refresh()
 		{
-			var events = App.Prototype.Repository.OfType<Event>().ToList();
-			foreach (var e in events) App.Prototype.Repository.Remove(e);
-
 			var httpClient = new Windows.Web.Http.HttpClient();
-			var downloaded = await httpClient.GetStringAsync(new Uri("http://mbusrelay.azurewebsites.net/api/mbus?" + DateTime.Now.Ticks));
+			httpClient.DefaultRequestHeaders.Add("Accept", "application/xml");
+			var downloaded = await httpClient.GetStringAsync(new Uri("https://mbusrelay.azurewebsites.net/api/mbus?" + DateTime.Now.Ticks));
 
-			var messages = JsonValue.Parse(downloaded).GetArray()
-				.Select(i => new Event
+			XNamespace xmlns_mbusrelay = "http://schemas.datacontract.org/2004/07/MBus.Relay";
+			var messages = XDocument.Parse(downloaded)
+				.Descendants(xmlns_mbusrelay + "RecentMessages.RecentMessage")
+				.Select(m => new Event
 				{
-					ClientName = i.GetObject().GetNamedString("UserName"),
-					Message = i.GetObject().GetNamedString("Message")
-				})
-				.ToList();
-			
-			return messages;
+					ClientName = m.Element(xmlns_mbusrelay + "UserName").Value,
+					Message = m.Element(xmlns_mbusrelay + "Message").Value
+				}).ToList();
+
+			var events = App.Prototype.Repository.OfType<Event>().ToList();
+			events.ForEach(e => App.Prototype.Repository.Remove(e));
+			messages.ForEach(m => App.Prototype.Repository.Add(m));
 		}
 	}
 }

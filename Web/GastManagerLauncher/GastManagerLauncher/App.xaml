@@ -4,5 +4,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GastManagerLauncher"
     RequestedTheme="Light">
+	<Application.Resources>
 
+		<DataTemplate x:Key="EventListItem">
+			<Grid Margin="0,10,0,10">
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<TextBlock
+					Text="{Binding ProxiedObject.Message}" 
+					/>
+				<StackPanel Grid.Row="1" Orientation="Horizontal">
+					<TextBlock Text="von" FontSize="12" Opacity="0.5" Margin="0,0,5,0"/>
+					<TextBlock 
+						Text="{Binding ProxiedObject.ClientName}" 
+						FontSize="12"
+						/>
+				</StackPanel>
+			</Grid>
+		</DataTemplate>
+
+	</Application.Resources>
 </Application>
