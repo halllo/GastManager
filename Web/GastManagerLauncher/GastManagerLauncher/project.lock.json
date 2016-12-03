@@ -3,7 +3,7 @@
   "version": 2,
   "targets": {
     "UAP,Version=v10.0": {
-      "jop.universal/1.0.46": {
+      "jop.universal/1.0.47": {
         "type": "package",
         "compile": {
           "lib/uap10.0/JustObjectsPrototype.Universal.dll": {}
@@ -2152,7 +2152,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
-      "jop.universal/1.0.46": {
+      "jop.universal/1.0.47": {
         "type": "package",
         "compile": {
           "lib/uap10.0/JustObjectsPrototype.Universal.dll": {}
@@ -4409,7 +4409,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
-      "jop.universal/1.0.46": {
+      "jop.universal/1.0.47": {
         "type": "package",
         "compile": {
           "lib/uap10.0/JustObjectsPrototype.Universal.dll": {}
@@ -6705,7 +6705,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
-      "jop.universal/1.0.46": {
+      "jop.universal/1.0.47": {
         "type": "package",
         "compile": {
           "lib/uap10.0/JustObjectsPrototype.Universal.dll": {}
@@ -8971,7 +8971,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
-      "jop.universal/1.0.46": {
+      "jop.universal/1.0.47": {
         "type": "package",
         "compile": {
           "lib/uap10.0/JustObjectsPrototype.Universal.dll": {}
@@ -11276,7 +11276,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
-      "jop.universal/1.0.46": {
+      "jop.universal/1.0.47": {
         "type": "package",
         "compile": {
           "lib/uap10.0/JustObjectsPrototype.Universal.dll": {}
@@ -13542,7 +13542,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
-      "jop.universal/1.0.46": {
+      "jop.universal/1.0.47": {
         "type": "package",
         "compile": {
           "lib/uap10.0/JustObjectsPrototype.Universal.dll": {}
@@ -15848,12 +15848,12 @@
     }
   },
   "libraries": {
-    "jop.universal/1.0.46": {
-      "sha512": "5Sz7dRXWsF8jAC9i3OkUByajs+O2/4PiFmJKQME9zC5uWw5J4yzOb3XAKsuaC1jvDXK7KfXacS7aK7IRZi/9Sw==",
+    "jop.universal/1.0.47": {
+      "sha512": "kprw+Qu/giAZGqEYB9fryHq7ZYZc4zRDDxyyl4tgysmQMEOuigtMWGqAHpqxCkh+9fK2Fe8XvG/EnEC4bBc3ug==",
       "type": "package",
       "files": [
-        "jop.universal.1.0.46.nupkg.sha512",
-        "jop.universal.nuspec",
+        "JOP.universal.1.0.47.nupkg.sha512",
+        "JOP.universal.nuspec",
         "lib/uap10.0/JustObjectsPrototype.Universal.dll",
         "lib/uap10.0/JustObjectsPrototype.Universal.pdb",
         "lib/uap10.0/JustObjectsPrototype.Universal.pri",
@@ -21878,7 +21878,7 @@
   "projectFileDependencyGroups": {
     "": [
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.2.2",
-      "jop.universal >= 1.0.46"
+      "jop.universal >= 1.0.47"
     ],
     "UAP,Version=v10.0": []
   }

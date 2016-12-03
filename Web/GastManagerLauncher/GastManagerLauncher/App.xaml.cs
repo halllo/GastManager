@@ -44,6 +44,7 @@ namespace GastManagerLauncher
 				})
 				.AndViewOf<Gast>()
 				.AndViewOf<Event>()
+				.AndViewOf<Bild>()
 				.AndOpen<Gast>()
 				);
 		}
@@ -123,14 +124,20 @@ namespace GastManagerLauncher
 			events.ForEach(e => App.Prototype.Repository.Remove(e));
 			messages.ForEach(m => App.Prototype.Repository.Add(m));
 		}
+	}
 
-		[Icon(Symbol.OpenFile), Title("Bild teilen")]
+
+
+
+	[Title("Bilder"), Icon(Symbol.RotateCamera)]
+	public class Bild
+	{
+		[Icon(Symbol.OpenFile), Title("Zeigen"), WithProgressBar]
 		public async static void Image()
 		{
 			var picker = new FileOpenPicker();
 			picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
 			picker.FileTypeFilter.Add(".jpg");
-			picker.FileTypeFilter.Add(".jpeg");
 			picker.FileTypeFilter.Add(".png");
 			var picked = await picker.PickSingleFileAsync();
 			using (var opened = await picked.OpenReadAsync())
@@ -139,25 +146,27 @@ namespace GastManagerLauncher
 				using (var encoderStream = new InMemoryRandomAccessStream())
 				{
 					var encoder = await BitmapEncoder.CreateForTranscodingAsync(encoderStream, decoder);
-					uint newWidth = 100;
+					uint newWidth = 1024;
 					var scaleFactor = decoder.PixelWidth / (double)newWidth;
 					uint newHeight = (uint)(decoder.PixelHeight / scaleFactor);
 					encoder.BitmapTransform.ScaledWidth = newWidth;
 					encoder.BitmapTransform.ScaledHeight = newHeight;
 
 					await encoder.FlushAsync();
-
-					byte[] pixels = new byte[newWidth * newHeight * 4];
+					byte[] pixels = new byte[encoderStream.Size];
 					await encoderStream.ReadAsync(pixels.AsBuffer(), (uint)pixels.Length, InputStreamOptions.None);
 
-					await EmitOnMBus($"<{picked.FileType}{pixels.Length.ToString().PadLeft(12, '0')}>{Convert.ToBase64String(pixels)}");
+					var base64 = Convert.ToBase64String(pixels);
+
+					await EmitOnMBus($"<b{pixels.Length.ToString().PadLeft(12, '0')}>{base64}");
 				}
 			}
+			await new MessageDialog("Emitted!").ShowAsync();
 		}
 
 		private static async Task EmitOnMBus(string content)
 		{
-			var sender = "GastManagerLauncher.Image";
+			var sender = "GastManagerLauncher";
 
 			var httpClient = new HttpClient();
 			var response = await httpClient.PostAsync(
