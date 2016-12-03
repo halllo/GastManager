@@ -10,6 +10,15 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml.Linq;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Text;
+using Windows.UI.Popups;
+using Windows.Storage.Pickers;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage.Streams;
+using Windows.Graphics.Imaging;
+using System.IO;
 
 namespace GastManagerLauncher
 {
@@ -107,12 +116,58 @@ namespace GastManagerLauncher
 				.Select(m => new Event
 				{
 					ClientName = m.Element(xmlns_mbusrelay + "UserName").Value,
-					Message = m.Element(xmlns_mbusrelay + "Message").Value
+					Message = string.Concat(m.Element(xmlns_mbusrelay + "Message").Value.Take(100))
 				}).ToList();
 
 			var events = App.Prototype.Repository.OfType<Event>().ToList();
 			events.ForEach(e => App.Prototype.Repository.Remove(e));
 			messages.ForEach(m => App.Prototype.Repository.Add(m));
+		}
+
+		[Icon(Symbol.OpenFile), Title("Bild teilen")]
+		public async static void Image()
+		{
+			var picker = new FileOpenPicker();
+			picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+			picker.FileTypeFilter.Add(".jpg");
+			picker.FileTypeFilter.Add(".jpeg");
+			picker.FileTypeFilter.Add(".png");
+			var picked = await picker.PickSingleFileAsync();
+			using (var opened = await picked.OpenReadAsync())
+			{
+				var decoder = await BitmapDecoder.CreateAsync(opened);
+				using (var encoderStream = new InMemoryRandomAccessStream())
+				{
+					var encoder = await BitmapEncoder.CreateForTranscodingAsync(encoderStream, decoder);
+					uint newWidth = 100;
+					var scaleFactor = decoder.PixelWidth / (double)newWidth;
+					uint newHeight = (uint)(decoder.PixelHeight / scaleFactor);
+					encoder.BitmapTransform.ScaledWidth = newWidth;
+					encoder.BitmapTransform.ScaledHeight = newHeight;
+
+					await encoder.FlushAsync();
+
+					byte[] pixels = new byte[newWidth * newHeight * 4];
+					await encoderStream.ReadAsync(pixels.AsBuffer(), (uint)pixels.Length, InputStreamOptions.None);
+
+					await EmitOnMBus($"<{picked.FileType}{pixels.Length.ToString().PadLeft(12, '0')}>{Convert.ToBase64String(pixels)}");
+				}
+			}
+		}
+
+		private static async Task EmitOnMBus(string content)
+		{
+			var sender = "GastManagerLauncher.Image";
+
+			var httpClient = new HttpClient();
+			var response = await httpClient.PostAsync(
+				new Uri("https://mbusrelay.azurewebsites.net/api/mbus"),
+				new StringContent("{sender:'" + sender + "',content:'" + content + "'}", Encoding.UTF8, "application/json"));
+
+			if (!response.IsSuccessStatusCode)
+			{
+				await new MessageDialog(response.StatusCode.ToString() + "\n" + await response.Content.ReadAsStringAsync()).ShowAsync();
+			}
 		}
 	}
 }
