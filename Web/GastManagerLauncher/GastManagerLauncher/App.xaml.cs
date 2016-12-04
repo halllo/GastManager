@@ -213,10 +213,13 @@ namespace GastManagerLauncher
 		[Icon(Symbol.SlideShow), Title("Zeigen"), WithProgressBar]
 		public static async void Publish(ObservableCollection<Bild> bilder)
 		{
-			foreach (var bild in bilder)
+			await Show.Message($"Alle {bilder.Count} Bilder nochmal veröffentlichen?", async () =>
 			{
-				await EmitOnMBus($"<bild{bild.Size.ToString().PadLeft(12, '0')}>{bild.ImageAsBase64}");
-			}
+				foreach (var bild in bilder)
+				{
+					await EmitOnMBus($"<bild{bild.Size.ToString().PadLeft(12, '0')}>{bild.ImageAsBase64}");
+				}
+			});
 			await Show.Message("Bestätigen?", () => EmitOnMBus("Bilder zeigen bestätigt"));
 		}
 
