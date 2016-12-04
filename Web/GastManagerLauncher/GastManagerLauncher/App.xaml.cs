@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.Streams;
 using Windows.Graphics.Imaging;
 using System.IO;
+using System.Collections.ObjectModel;
 
 namespace GastManagerLauncher
 {
@@ -129,39 +130,94 @@ namespace GastManagerLauncher
 
 
 
-	[Title("Bilder"), Icon(Symbol.RotateCamera)]
+	[Title("Bilder"), Icon(Symbol.RotateCamera), CustomView("BildListItem")]
 	public class Bild
 	{
-		[Icon(Symbol.OpenFile), Title("Zeigen"), WithProgressBar]
-		public async static void Image()
+		[Editor(hide: true)]
+		public string Filename { get; set; }
+		[Editor(@readonly: true)]
+		public int Size { get; set; }
+		[CustomView("ImageDisplay")]
+		public BitmapImage Image { get; set; }
+		[Editor(hide: true)]
+		public string ImageAsBase64 { get; set; }
+
+		[Icon(Symbol.OpenFile), Title("Hinzufügen"), WithProgressBar]
+		public async static Task<List<Bild>> Add()
 		{
+			var neueBilder = new List<Bild>();
+
 			var picker = new FileOpenPicker();
 			picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
 			picker.FileTypeFilter.Add(".jpg");
 			picker.FileTypeFilter.Add(".png");
-			var picked = await picker.PickSingleFileAsync();
-			using (var opened = await picked.OpenReadAsync())
+			var picked = await picker.PickMultipleFilesAsync();
+			foreach (var file in picked)
 			{
-				var decoder = await BitmapDecoder.CreateAsync(opened);
-				using (var encoderStream = new InMemoryRandomAccessStream())
+				using (var opened = await file.OpenReadAsync())
 				{
-					var encoder = await BitmapEncoder.CreateForTranscodingAsync(encoderStream, decoder);
-					uint newWidth = 1024;
-					var scaleFactor = decoder.PixelWidth / (double)newWidth;
-					uint newHeight = (uint)(decoder.PixelHeight / scaleFactor);
-					encoder.BitmapTransform.ScaledWidth = newWidth;
-					encoder.BitmapTransform.ScaledHeight = newHeight;
-
-					await encoder.FlushAsync();
-					byte[] pixels = new byte[encoderStream.Size];
-					await encoderStream.ReadAsync(pixels.AsBuffer(), (uint)pixels.Length, InputStreamOptions.None);
-
+					var image = await BitmapDecoder.CreateAsync(opened);
+					var pixels = await ImageToScaledPixels(image, newWidth: 1024);
 					var base64 = Convert.ToBase64String(pixels);
+					var pixelsAgain = Convert.FromBase64String(base64);
+					var convertedImage = await ImageFromBytes(pixels);
 
-					await EmitOnMBus($"<b{pixels.Length.ToString().PadLeft(12, '0')}>{base64}");
+					neueBilder.Add(new Bild
+					{
+						Filename = file.Name,
+						Size = pixels.Length,
+						ImageAsBase64 = base64,
+						Image = convertedImage
+					});
 				}
 			}
-			await new MessageDialog("Emitted!").ShowAsync();
+			return neueBilder;
+		}
+
+		private async static Task<byte[]> ImageToScaledPixels(BitmapDecoder decoder, uint newWidth)
+		{
+			using (var encoderStream = new InMemoryRandomAccessStream())
+			{
+				var encoder = await BitmapEncoder.CreateForTranscodingAsync(encoderStream, decoder);
+				var scaleFactor = decoder.PixelWidth / (double)newWidth;
+				uint newHeight = (uint)(decoder.PixelHeight / scaleFactor);
+				encoder.BitmapTransform.ScaledWidth = newWidth;
+				encoder.BitmapTransform.ScaledHeight = newHeight;
+
+				await encoder.FlushAsync();
+				byte[] pixels = new byte[encoderStream.Size];
+				await encoderStream.ReadAsync(pixels.AsBuffer(), (uint)pixels.Length, InputStreamOptions.None);
+
+				return pixels;
+			}
+		}
+
+		private async static Task<BitmapImage> ImageFromBytes(byte[] pixels)
+		{
+			BitmapImage image = new BitmapImage();
+			using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+			{
+				await stream.WriteAsync(pixels.AsBuffer());
+				stream.Seek(0);
+				await image.SetSourceAsync(stream);
+			}
+			return image;
+		}
+
+		[Icon(Symbol.Clear), Title("Leeren"), WithProgressBar]
+		public static void Clear(ObservableCollection<Bild> bilder)
+		{
+			bilder.Clear();
+		}
+
+		[Icon(Symbol.SlideShow), Title("Zeigen"), WithProgressBar]
+		public static async void Publish(ObservableCollection<Bild> bilder)
+		{
+			foreach (var bild in bilder)
+			{
+				await EmitOnMBus($"<bild{bild.Size.ToString().PadLeft(12, '0')}>{bild.ImageAsBase64}");
+			}
+			await Show.Message("Bestätigen?", () => EmitOnMBus("Bilder zeigen bestätigt"));
 		}
 
 		private static async Task EmitOnMBus(string content)

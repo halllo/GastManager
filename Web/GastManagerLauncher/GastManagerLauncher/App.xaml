@@ -25,5 +25,24 @@
 			</Grid>
 		</DataTemplate>
 
+		<DataTemplate x:Key="BildListItem">
+			<Grid Margin="0,10,0,10">
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<TextBlock
+					Text="{Binding ProxiedObject.Filename}" 
+					/>
+				<Image Grid.Row="1" Source="{Binding ProxiedObject.Image}" Stretch="UniformToFill" Height="100"/>
+			</Grid>
+		</DataTemplate>
+
+		<DataTemplate x:Key="ImageDisplay">
+			<Grid Margin="0,10,0,10">
+				<Image Source="{Binding Value}" HorizontalAlignment="Left" Height="350" Stretch="Uniform"/>
+			</Grid>
+		</DataTemplate>
+
 	</Application.Resources>
 </Application>
